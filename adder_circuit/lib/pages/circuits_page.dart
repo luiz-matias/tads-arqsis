@@ -31,37 +31,41 @@ class CircuitsPage extends StatelessWidget {
               shrinkWrap: true,
               crossAxisCount: 3,
               children: List.generate(15, (index) {
-                return Container(
-                  decoration: BoxDecoration(color: Colors.grey[500]),
-                  width: MediaQuery.of(context).size.width / 3,
-                  height: MediaQuery.of(context).size.width / 3,
-                  child: Padding(
-                    padding: EdgeInsets.all(1),
-                    child: Hero(
-                      tag: 'image_$index',
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CircuitImagePage(index),
-                            ),
-                          );
-                        },
-                        child: Image.asset(
-                          "assets/images/adder-circuit-image-$index.png",
-                          width: MediaQuery.of(context).size.width / 3,
-                          height: MediaQuery.of(context).size.width / 3,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
+                return _gridItem(index, context);
               }),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _gridItem(int index, BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(color: Colors.grey[500]),
+      width: MediaQuery.of(context).size.width / 3,
+      height: MediaQuery.of(context).size.width / 3,
+      child: Padding(
+        padding: EdgeInsets.all(1),
+        child: Hero(
+          tag: 'image_$index',
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CircuitImagePage(index),
+                ),
+              );
+            },
+            child: Image.asset(
+              "assets/images/adder-circuit-image-$index.png",
+              width: MediaQuery.of(context).size.width / 3,
+              height: MediaQuery.of(context).size.width / 3,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
       ),
     );
   }
