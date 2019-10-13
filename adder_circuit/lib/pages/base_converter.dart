@@ -25,6 +25,7 @@ class Bases {
 }
 
 class _BaseConverterPageState extends State<BaseConverterPage> {
+  String conversionResult = "";
   List<Bases> _bases = Bases.getBases();
   List<DropdownMenuItem<Bases>> _dropDownMenuItems;
   Bases _selectedBase;
@@ -108,6 +109,13 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
             child: Text("Converter"),
             onPressed: _convertBase,
           ),
+          SizedBox(
+            height: 30,
+          ),
+          Text(
+            "Resultado: $conversionResult",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -120,9 +128,22 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     if (_selectedBase.id == 1) {
       print(
           "O número decimal ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${binaryToDecimal(textFieldController.text)}");
+      setState(() {
+        conversionResult = binaryToDecimal(textFieldController.text);
+      });
     } else if (_selectedBase.id == 2 || _selectedBase.id == 3) {
       print(
-          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${decimaltoBinary(textFieldController.text, _selectedBase.id)}");
+          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${decimaltoBinOrHex(textFieldController.text, _selectedBase.id)}");
+      setState(() {
+        conversionResult = decimaltoBinOrHex(textFieldController.text, _selectedBase.id);
+      });
+
+    } else {
+      print(
+          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${hexaToDecimal(textFieldController.text)}");
+      setState(() {
+        conversionResult = hexaToDecimal(textFieldController.text);
+      });
     }
   }
 
@@ -145,16 +166,42 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     }
 
     // Retorna o valor total
-    return dec_value;
+    return dec_value.toString();
   }
 
-  decimaltoBinary(decimalNumber, selectedBase) {
+  hexaToDecimal(hexNumber) {
+    String hexNum = hexNumber.toString().toUpperCase();
+    int hexLength = hexNum.length;
+
+    int dec_value = 0;
+
+    // Inicializando a base para 1
+    // Aka 2ˆ0
+    int base = 1;
+
+    for (int i = hexLength - 1; i >= 0; i--) {
+      print(hexNum.codeUnitAt(i));
+      if (hexNum.codeUnitAt(i) >= '0'.codeUnitAt(0) &&
+          hexNum.codeUnitAt(i) <= '9'.codeUnitAt(0)) {
+        int asciiValue = hexNum.codeUnitAt(i) - 48;
+        dec_value += (asciiValue * base);
+      } else if (hexNum.codeUnitAt(i) >= 'A'.codeUnitAt(0) &&
+          hexNum.codeUnitAt(i) <= 'F'.codeUnitAt(0)) {
+        int asciiValue = hexNum.codeUnitAt(i) - 55;
+        dec_value += (asciiValue * base);
+      }
+      base = base * 16;
+    }
+    return dec_value.toString();
+  }
+
+  decimaltoBinOrHex(decimalNumber, selectedBase) {
     int base;
     var decNumber = int.parse(decimalNumber);
     print(decimalNumber);
     if (selectedBase == 2) {
       base = 2;
-    } else{
+    } else {
       base = 16;
     }
 
@@ -163,7 +210,7 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     do {
       resto = decNumber % base;
       decNumber = decNumber ~/ base;
-      if(resto > 9) {
+      if (resto > 9) {
         convertedNumber = "${swapNumberToHexCharacter(resto)}$convertedNumber";
       } else {
         convertedNumber = "${resto.toString()}$convertedNumber";
@@ -175,14 +222,20 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
 
   String swapNumberToHexCharacter(int number) {
     switch (number) {
-      case 10: return "A";
-      case 11: return "B";
-      case 12: return "C";
-      case 13: return "D";
-      case 14: return "E";
-      case 15: return "F";
-      default: return "";
+      case 10:
+        return "A";
+      case 11:
+        return "B";
+      case 12:
+        return "C";
+      case 13:
+        return "D";
+      case 14:
+        return "E";
+      case 15:
+        return "F";
+      default:
+        return "";
     }
   }
-
 }
