@@ -16,10 +16,10 @@ class Bases {
 
   static List<Bases> getBases() {
     return <Bases>[
-      Bases(1, "Hexadecimal"),
-      Bases(2, "Decimal"),
-      Bases(3, "Octal"),
-      Bases(4, "Binário"),
+      Bases(1, "Binário para Decimal"),
+      Bases(2, "Decimal para Binário"),
+      Bases(3, "Decimal para Hexadecimal"),
+      Bases(4, "Hexadecimal para Decimal"),
     ];
   }
 }
@@ -28,14 +28,12 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
   List<Bases> _bases = Bases.getBases();
   List<DropdownMenuItem<Bases>> _dropDownMenuItems;
   Bases _selectedBase;
-  Bases _secondSelectedBase;
   final textFieldController = TextEditingController();
 
   @override
   void initState() {
     _dropDownMenuItems = buildDropDownMenuItems(_bases);
     _selectedBase = _dropDownMenuItems[0].value;
-    _secondSelectedBase = _dropDownMenuItems[0].value;
     // TODO: implement initState
     super.initState();
   }
@@ -59,12 +57,6 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     });
   }
 
-  secondChangeDropdownItem(Bases secondBase) {
-    setState(() {
-      _secondSelectedBase = secondBase;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -73,10 +65,15 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Container(
-            child: Text(
-              "Selecione a base do número de entrada",
-              style: TextStyle(fontSize: 18),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Container(
+              child: Text(
+                "Selecione a forma de conversão",
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -95,33 +92,12 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
             height: 16,
           ),
           Container(
-            width: MediaQuery.of(context).size.width / 3.5,
+            width: MediaQuery.of(context).size.width / 2.1,
             child: TextField(
               controller: textFieldController,
               decoration: InputDecoration(
                 hintText: 'Entrada',
                 fillColor: Colors.black,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 60,
-          ),
-          Container(
-            child: Text(
-              "Selecione a base do número de saída",
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Container(
-            child: Center(
-              child: DropdownButton(
-                value: _secondSelectedBase,
-                items: _dropDownMenuItems,
-                onChanged: secondChangeDropdownItem,
               ),
             ),
           ),
@@ -140,13 +116,17 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
   _convertBase() {
     print("the button works!");
     print(_selectedBase.baseName);
-    print(_secondSelectedBase.baseName);
     print(textFieldController.text);
-    print(
-        "O número decimal ${textFieldController.text} na base ${_secondSelectedBase.baseName} é igual a ${binaryToDecimal(textFieldController.text, _secondSelectedBase.baseName)}");
+    if (_selectedBase.id == 1) {
+      print(
+          "O número decimal ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${binaryToDecimal(textFieldController.text)}");
+    } else if (_selectedBase.id == 2 || _selectedBase.id == 3) {
+      print(
+          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${decimaltoBinary(textFieldController.text, _selectedBase.id)}");
+    }
   }
 
-  binaryToDecimal(binaryNumber, base) {
+  binaryToDecimal(binaryNumber) {
     // Conversão do número de Int para String
     String num = binaryNumber.toString();
     // Declaração da variável de resultado
@@ -167,4 +147,42 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     // Retorna o valor total
     return dec_value;
   }
+
+  decimaltoBinary(decimalNumber, selectedBase) {
+    int base;
+    var decNumber = int.parse(decimalNumber);
+    print(decimalNumber);
+    if (selectedBase == 2) {
+      base = 2;
+    } else{
+      base = 16;
+    }
+
+    String convertedNumber = "";
+    int resto;
+    do {
+      resto = decNumber % base;
+      decNumber = decNumber ~/ base;
+      if(resto > 9) {
+        convertedNumber = "${swapNumberToHexCharacter(resto)}$convertedNumber";
+      } else {
+        convertedNumber = "${resto.toString()}$convertedNumber";
+      }
+    } while (decNumber != 0);
+
+    return convertedNumber;
+  }
+
+  String swapNumberToHexCharacter(int number) {
+    switch (number) {
+      case 10: return "A";
+      case 11: return "B";
+      case 12: return "C";
+      case 13: return "D";
+      case 14: return "E";
+      case 15: return "F";
+      default: return "";
+    }
+  }
+
 }
