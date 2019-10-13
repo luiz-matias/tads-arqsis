@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:core' as prefix0;
 
+import 'package:adder_circuit/domain/base_converter.dart';
 import 'package:flutter/material.dart';
 
 class BaseConverterPage extends StatefulWidget {
@@ -35,7 +36,6 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
   void initState() {
     _dropDownMenuItems = buildDropDownMenuItems(_bases);
     _selectedBase = _dropDownMenuItems[0].value;
-    // TODO: implement initState
     super.initState();
   }
 
@@ -127,115 +127,25 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
     print(textFieldController.text);
     if (_selectedBase.id == 1) {
       print(
-          "O número decimal ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${binaryToDecimal(textFieldController.text)}");
+          "O número decimal ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${BaseConverter.binaryToDecimal(textFieldController.text)}");
       setState(() {
-        conversionResult = binaryToDecimal(textFieldController.text);
+        conversionResult =
+            BaseConverter.binaryToDecimal(textFieldController.text);
       });
     } else if (_selectedBase.id == 2 || _selectedBase.id == 3) {
       print(
-          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${decimaltoBinOrHex(textFieldController.text, _selectedBase.id)}");
+          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${BaseConverter.decimaltoBinOrHex(textFieldController.text, _selectedBase.id)}");
       setState(() {
-        conversionResult = decimaltoBinOrHex(textFieldController.text, _selectedBase.id);
+        conversionResult = BaseConverter.decimaltoBinOrHex(
+            textFieldController.text, _selectedBase.id);
       });
-
     } else {
       print(
-          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${hexaToDecimal(textFieldController.text)}");
+          "O número binário ${textFieldController.text} na base ${_selectedBase.baseName} é igual a ${BaseConverter.hexaToDecimal(textFieldController.text)}");
       setState(() {
-        conversionResult = hexaToDecimal(textFieldController.text);
+        conversionResult =
+            BaseConverter.hexaToDecimal(textFieldController.text);
       });
-    }
-  }
-
-  binaryToDecimal(binaryNumber) {
-    // Conversão do número de Int para String
-    String num = binaryNumber.toString();
-    // Declaração da variável de resultado
-    int dec_value = 0;
-
-    // Inicializando a base para 1
-    // Aka 2ˆ0
-    int base = 1;
-
-    // Loop que incrementa o valor total onde valor da posição do número na String é o expoente.
-    for (int i = num.length - 1; i >= 0; i--) {
-      if (num[i] == '1') {
-        dec_value += base;
-      }
-      base = base * 2;
-    }
-
-    // Retorna o valor total
-    return dec_value.toString();
-  }
-
-  hexaToDecimal(hexNumber) {
-    String hexNum = hexNumber.toString().toUpperCase();
-    int hexLength = hexNum.length;
-
-    int dec_value = 0;
-
-    // Inicializando a base para 1
-    // Aka 2ˆ0
-    int base = 1;
-
-    for (int i = hexLength - 1; i >= 0; i--) {
-      print(hexNum.codeUnitAt(i));
-      if (hexNum.codeUnitAt(i) >= '0'.codeUnitAt(0) &&
-          hexNum.codeUnitAt(i) <= '9'.codeUnitAt(0)) {
-        int asciiValue = hexNum.codeUnitAt(i) - 48;
-        dec_value += (asciiValue * base);
-      } else if (hexNum.codeUnitAt(i) >= 'A'.codeUnitAt(0) &&
-          hexNum.codeUnitAt(i) <= 'F'.codeUnitAt(0)) {
-        int asciiValue = hexNum.codeUnitAt(i) - 55;
-        dec_value += (asciiValue * base);
-      }
-      base = base * 16;
-    }
-    return dec_value.toString();
-  }
-
-  decimaltoBinOrHex(decimalNumber, selectedBase) {
-    int base;
-    var decNumber = int.parse(decimalNumber);
-    print(decimalNumber);
-    if (selectedBase == 2) {
-      base = 2;
-    } else {
-      base = 16;
-    }
-
-    String convertedNumber = "";
-    int resto;
-    do {
-      resto = decNumber % base;
-      decNumber = decNumber ~/ base;
-      if (resto > 9) {
-        convertedNumber = "${swapNumberToHexCharacter(resto)}$convertedNumber";
-      } else {
-        convertedNumber = "${resto.toString()}$convertedNumber";
-      }
-    } while (decNumber != 0);
-
-    return convertedNumber;
-  }
-
-  String swapNumberToHexCharacter(int number) {
-    switch (number) {
-      case 10:
-        return "A";
-      case 11:
-        return "B";
-      case 12:
-        return "C";
-      case 13:
-        return "D";
-      case 14:
-        return "E";
-      case 15:
-        return "F";
-      default:
-        return "";
     }
   }
 }
