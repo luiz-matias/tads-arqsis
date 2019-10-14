@@ -62,69 +62,71 @@ class _BaseConverterPageState extends State<BaseConverterPage> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Text(
-              "Conversor de bases",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Container(
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: Text(
-                "Selecione a forma de conversão",
-                style: TextStyle(
-                  fontSize: 18,
+                "Conversor de bases",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Container(
+                child: Text(
+                  "Selecione a forma de conversão",
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Container(
-            child: Center(
-              child: DropdownButton(
-                value: _selectedBase,
-                items: _dropDownMenuItems,
-                onChanged: onChangeDropdownItem,
+            SizedBox(
+              height: 16,
+            ),
+            Container(
+              child: Center(
+                child: DropdownButton(
+                  value: _selectedBase,
+                  items: _dropDownMenuItems,
+                  onChanged: onChangeDropdownItem,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width / 2.1,
-            child: TextField(
-              controller: textFieldController,
-              decoration: InputDecoration(
-                hintText: 'Entrada',
-                fillColor: Colors.black,
+            SizedBox(
+              height: 16,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width / 2.1,
+              child: TextField(
+                controller: textFieldController,
+                decoration: InputDecoration(
+                  hintText: 'Entrada',
+                  fillColor: Colors.black,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          RaisedButton(
-            child: Text("Converter"),
-            onPressed: _convertBase,
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Text(
-            "Resultado: $conversionResult",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-        ],
+            SizedBox(
+              height: 30,
+            ),
+            RaisedButton(
+              child: Text("Converter"),
+              onPressed: _convertBase,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              "Resultado: $conversionResult",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
