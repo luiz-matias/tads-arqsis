@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 4,
@@ -34,6 +34,27 @@ class MyApp extends StatelessWidget {
               CircuitsPage()
             ],
           ),
+          bottomNavigationBar: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[300],
+                  spreadRadius: 0,
+                  blurRadius: 4
+                )
+              ]
+            ),
+            child: Center(
+              child: Text(
+                "Made by Gustavo Tatarem and Luiz Matias",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          )
         ),
       ),
     );

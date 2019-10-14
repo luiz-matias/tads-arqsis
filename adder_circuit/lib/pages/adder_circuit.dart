@@ -11,6 +11,8 @@ class _AdderCircuitPageState extends State<AdderCircuitPage> {
   final textFieldController1 = TextEditingController();
   final textFieldController2 = TextEditingController();
   String stringResult = "";
+  bool firstConversionMade = false;
+  bool secondConversionMade = false;
   bool conversionMade = false;
   bool inputsFilled = false;
 
@@ -51,19 +53,10 @@ class _AdderCircuitPageState extends State<AdderCircuitPage> {
                     labelText: "1° Entrada",
                     hintText: 'ex: 1101',
                     fillColor: Colors.black,
+                    helperText: firstConversionMade
+                        ? "Em decimal: ${BaseConverter.binaryToDecimal(textFieldController1.text)}"
+                        : "Valor binário inválido",
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Text(
-                conversionMade
-                    ? "Em decimal: ${BaseConverter.binaryToDecimal(textFieldController1.text)}"
-                    : "Valor binário inválido",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[700],
                 ),
               ),
             ),
@@ -89,19 +82,10 @@ class _AdderCircuitPageState extends State<AdderCircuitPage> {
                     labelText: "2° Entrada",
                     hintText: 'ex: 1111',
                     fillColor: Colors.black,
+                    helperText: secondConversionMade
+                        ? "Em decimal: ${BaseConverter.binaryToDecimal(textFieldController2.text)}"
+                        : "Valor binário inválido",
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Text(
-                conversionMade
-                    ? "Em decimal: ${BaseConverter.binaryToDecimal(textFieldController2.text)}"
-                    : "Valor binário inválido",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[700],
                 ),
               ),
             ),
@@ -160,40 +144,43 @@ class _AdderCircuitPageState extends State<AdderCircuitPage> {
   }
 
   void makeSum(String number1, String number2) {
+
+    List<bool> firstBinaryNumber = [false, false, false, false];
+    List<bool> secondBinaryNumber = [false, false, false, false];
+    List<bool> result = new List(5);
+
+    conversionMade = true;
+    firstConversionMade = true;
+    secondConversionMade = true;
+
+    int j = 3;
+    for (int i = 0; i < number1.length; i++) {
+      if (number1[i] == "1") {
+        firstBinaryNumber[j] = true;
+      } else if (number1[i] == "0") {
+        firstBinaryNumber[j] = false;
+      } else {
+        firstConversionMade = false;
+      }
+      j--;
+    }
+
+    j = 3;
+    for (int i = 0; i < number2.length; i++) {
+      if (number2[i] == "1") {
+        secondBinaryNumber[j] = true;
+      } else if (number2[i] == "0") {
+        secondBinaryNumber[j] = false;
+      } else {
+        secondConversionMade = false;
+      }
+      j--;
+    }
+
+    conversionMade = firstConversionMade && secondConversionMade;
+
     if (number1.length == 4 && number2.length == 4) {
       inputsFilled = true;
-      List<bool> firstBinaryNumber = [false, false, false, false];
-      List<bool> secondBinaryNumber = [false, false, false, false];
-      List<bool> result = new List(5);
-
-      conversionMade = true;
-      int j = 3;
-      for (int i = 0; i < number1.length; i++) {
-        if (number1[i] == "1") {
-          firstBinaryNumber[j] = true;
-        } else if (number1[i] == "0") {
-          firstBinaryNumber[j] = false;
-        } else {
-          conversionMade = false;
-        }
-        j--;
-      }
-
-      j = 3;
-      for (int i = 0; i < number2.length; i++) {
-        if (number2[i] == "1") {
-          secondBinaryNumber[j] = true;
-        } else if (number2[i] == "0") {
-          secondBinaryNumber[j] = false;
-        } else {
-          conversionMade = false;
-        }
-        j--;
-      }
-
-      print("1: ${firstBinaryNumber.toString()}");
-      print("2: ${secondBinaryNumber.toString()}");
-
       if (conversionMade) {
         AdderCircuit adderCircuit = new AdderCircuit(4);
         result = adderCircuit.makeSum(firstBinaryNumber, secondBinaryNumber);
